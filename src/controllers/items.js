@@ -1,4 +1,6 @@
 import pool from '../db/pg.js';
+import asyncHandler from '../../utils/asyncHandler.js';
+
 
 export const getAllItems = async (req, res) => {
     try {
@@ -9,14 +11,12 @@ export const getAllItems = async (req, res) => {
     }
   }
 
-  export const createItem = async (req, res) => {
+  export const createItem = asyncHandler(async (req, res) => {
     try {
       const {
-        body: { itemid, userid, category, title, text, compensation, comment, pic1 }
-      } = req;
-     /*  if (!title || !author || !category || !imageurl ) {
-        throw new Error('Invalid body');
-      } */
+        body: { itemid, category, title, text, compensation, comment, pic1 }
+      , user: { userid } 
+    }= req;
       const query =
         'INSERT INTO Items (itemid, userid, category, title, text, compensation, comment, pic1) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *';
       const values = [itemid, userid, category, title, text, compensation, comment, pic1];
@@ -26,20 +26,20 @@ export const getAllItems = async (req, res) => {
       res.status(201).json(newItem);
     } catch (error) {
       res.status(500).json({ error: error.message });
-    }
-  };
+      }
+  });
 
 
   export const getSingleItem = async (req, res) => {
     try {
       const {
-        params: { itemid }
+        params: { id }
       } = req;
       const {
         rowCount,
         rows: [Item]
-      } = await pool.query('SELECT * FROM Items WHERE itemid = $1', [itemid]);
-      if (!rowCount) return res.status(404).json({ error: `Item with id of ${itemid} not found` });
+      } = await pool.query('SELECT * FROM Items WHERE itemid = $1', [id]);
+      if (!rowCount) return res.status(404).json({ error: `Item with id of ${id} not found` });
   
       res.json(Item);
     } catch (error) {

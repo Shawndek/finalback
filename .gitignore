@@ -1,4 +1,3 @@
-node_modules/
-
-public/upload/
+node_modules
+puplic
 .env
