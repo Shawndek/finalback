@@ -1,4 +1,3 @@
-const errorHandler = (err, req, res, next) =>
-  res.render('error', { title: err.message, error: err.message });
+const errorHandler = (err, req, res, next) => res.json({ error: err.message });
 
 export default errorHandler;
