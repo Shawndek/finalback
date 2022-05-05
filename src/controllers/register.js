@@ -1,5 +1,6 @@
 import pool from '../db/pg.js';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 
 export const createUser = async (req, res) => {
@@ -31,11 +32,21 @@ export const createUser = async (req, res) => {
       const values = [username, email, hash];
       const {
         rows: [newUser]
-      } = await pool.query(query, values);
-      res.status(201).json(newUser);
+      } = await pool.query(query, values);    
+
+      const token = jwt.sign(
+      {
+        userid: newUser.userid,
+        username: newUser.username,
+        email: newUser.email,
+      },
+      process.env.JWT_SECRET
+    );
+      return res.status(201).json({ token });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
-    return 
+
+
 
   };
