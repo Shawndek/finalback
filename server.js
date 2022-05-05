@@ -3,6 +3,9 @@ import imagesRouter from "./src/routes/imagesRouter.js";
 import itemsRouter from "./src/routes/itemsRouter.js";
 import registerRouter from "./src/routes/registerRouter.js";
 import loginRouter from "./src/routes/loginRouter.js";
+import userRouter from "./src/routes/userRouter.js";
+import verifyToken from "./src/middlewares/verifyToken.js";
+import { getUser } from "./src/controllers/user.js";
 import cors from "cors";
 
 const app = express();
@@ -16,7 +19,9 @@ app.use(express.json());
 app.use('/items', itemsRouter);
 app.use('/upload-pic', imagesRouter);
 app.use('/register', registerRouter);
-app.use('/login', loginRouter)
+app.use('/login', loginRouter);
+app.use('/user',userRouter);
+app.use('/me', verifyToken, getUser)
 app.get('/', (req,res) => {
     res.send('Items API')
 });
