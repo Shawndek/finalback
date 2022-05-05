@@ -4,9 +4,10 @@ import itemsRouter from "./src/routes/itemsRouter.js";
 import registerRouter from "./src/routes/registerRouter.js";
 import loginRouter from "./src/routes/loginRouter.js";
 import userRouter from "./src/routes/userRouter.js";
-import verifyToken from "./src/middlewares/verifyToken.js";
-import { getUser } from "./src/controllers/user.js";
+//import verifyToken from "./src/middlewares/verifyToken.js";
+//import { getUser } from "./src/controllers/user.js";
 import cors from "cors";
+import errorHandler from "./src/middlewares/errorHandler.js"
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -21,7 +22,9 @@ app.use('/upload-pic', imagesRouter);
 app.use('/register', registerRouter);
 app.use('/login', loginRouter);
 app.use('/user',userRouter);
-app.use('/me', verifyToken, getUser)
+//app.use('/me', verifyToken, getUser)
+app.use('*', (req, res) => res.sendStatus(404));
+app.use(errorHandler);
 app.get('/', (req,res) => {
     res.send('Items API')
 });

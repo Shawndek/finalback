@@ -1,98 +1,61 @@
-import pool from '../db/pg.js';
 
 export const getUser = async (req, res) => {
-    try {
-        const {
-            params: { username },
-            body: { email, password, lastname, firstname, address, postalcode, city, about, profile_pic }
-            } = req;
-        const { rows: user } = await pool.query('SELECT * FROM users WHERE username =$1', [
-            username
-            ]);
-        res.json(user);
-        } catch (error) {
-        res.status(500).json({ error: error.message });
-        }
+    res.json({user: req.user})
     }
 
-  export const createItem = async (req, res) => {
-    try {
-      const {
-        body: { itemid, userid, category, title, text, compensation, comment, pic1 }
-      } = req;
-     /*  if (!title || !author || !category || !imageurl ) {
-        throw new Error('Invalid body');
-      } */
-      const query =
-        'INSERT INTO users (itemid, userid, category, title, text, compensation, comment, pic1) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *';
-      const values = [itemid, userid, category, title, text, compensation, comment, pic1];
-      const {
-        rows: [newItem]
-      } = await pool.query(query, values);
-      res.status(201).json(newItem);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  };
-
-
-  export const getSingleItem = async (req, res) => {
-    try {
-      const {
-        params: { itemid }
-      } = req;
-      const {
-        rowCount,
-        rows: [Item]
-      } = await pool.query('SELECT * FROM Items WHERE itemid = $1', [itemid]);
-      if (!rowCount) return res.status(404).json({ error: `Item with id of ${itemid} not found` });
-  
-      res.json(Item);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  };
-
-
-
-export const updateItem = async (req, res) => {
-    try {
-      const {
-        params: { itemid },
-        body: { userid, category, title, text, compensation, comment, pic1 }
-      } = req;
-      const { rowCount: found } = await pool.query('SELECT * FROM Items WHERE id = $1', [itemid]);
-      if (!found) {
-        throw new Error(`The Item you are trying to update doesn't exist`);
+/*     export const getUserDetails = async (req, res) => {
+      try {
+          const {
+              params: { username },
+              body: { email, password, lastname, firstname, address, postalcode, city, about, profile_pic }
+              } = req;
+          const { rows: userDetails } = await pool.query('SELECT * FROM users WHERE username =$1', [
+              username
+              ]);
+          res.json(userDetails);
+          } catch (error) {
+          res.status(500).json({ error: error.message });
+          }
       }
-     /*  if (!title || !author || !category || !imageurl) {
-        throw new Error('Invalid body');
-      } */
+
+export const updateUser = async (req, res) => {
+    try {
       const {
-        rows: [Item]
+        params: { userid },
+        body: { username, category, title, text, compensation, comment, pic1 }
+      } = req;
+      const { rowCount: found } = await pool.query('SELECT * FROM Users WHERE id = $1', [userid]);
+      if (!found) {
+        throw new Error(`The User you are trying to update doesn't exist`);
+      }
+       if (!title || !author || !category || !imageurl) {
+        throw new Error('Invalid body');
+      } 
+      const {
+        rows: [User]
       } = await pool.query(
-        'UPDATE Items SET title = $2, author = $3, category = $4, imageurl = $5 WHERE id = $1 RETURNING *',
-        [itemid, userid, category, title, text, compensation, comment, pic1]
+        'UPDATE Users SET title = $2, author = $3, category = $4, imageurl = $5 WHERE id = $1 RETURNING *',
+        [userid, userid, category, title, text, compensation, comment, pic1]
       );
-      res.json(Item);
+      res.json(User);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   };
 
-  export const deleteItem = async (req, res) => {
+  export const deleteUser = async (req, res) => {
     try {
       const {
-        params: { itemid }
+        params: { userid }
       } = req;
-      const { rowCount } = await pool.query('DELETE FROM Items WHERE id = $1 RETURNING *', [itemid]);
+      const { rowCount } = await pool.query('DELETE FROM Users WHERE id = $1 RETURNING *', [userid]);
       if (rowCount) {
-        return res.json({ msg: `Item with id of ${itemid} was deleted` });
+        return res.json({ msg: `User with id of ${userid} was deleted` });
       } else {
-        throw new Error(`Item with id of ${itemid} doesn't even exist`);
+        throw new Error(`User with id of ${userid} doesn't even exist`);
       }
     } catch (error) {
       res.status(500).json({ error: error.message });
       ;
     }
-  };
+  }; */
