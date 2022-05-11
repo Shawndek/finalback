@@ -53,13 +53,13 @@ export const updateBid = async (req, res) => {
         'UPDATE Bids SET bid_status = $1 WHERE bid_id = $2 RETURNING *',
         [bid_status, bid_id]
       );
-      const rejectAllOherBids = pool.query(
+      const rejectAllOtherBids = pool.query(
         'UPDATE Bids SET bid_status = $1 WHERE item_id = $2 AND bid_id != $3 RETURNING *',
         [2, id, bid_id]
       );
       const [resolvedAccepted, resolvedRejected] = await Promise.all([
         acceptBidPromise,
-        rejectAllOherBids,
+        rejectAllOtherBids,
       ]);
 
       const { rowCount: acceptedAck, rows: acceptedBid } = resolvedAccepted;
